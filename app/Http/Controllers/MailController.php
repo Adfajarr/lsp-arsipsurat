@@ -49,10 +49,12 @@ class MailController extends Controller
             'file_path' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        $filePath = $request->file('file')->store('mails', 'public');
+        $filePath = $request->file('file_path')->store('mails', 'public');
         $data['file_path'] = $filePath;
 
         mail::create($data);
+
+        // dd($data);
 
         return redirect()->route('mail.index')->with('success', 'Mail created successfully.');
     }
@@ -71,7 +73,6 @@ class MailController extends Controller
     {
         $mail = Mail::findOrFail($id);
 
-        // Ambil path file dari database (misal kolomnya `file_path`)
         $filePath = storage_path('app/public/' . $mail->file_path);
 
         if (!file_exists($filePath)) {
@@ -101,23 +102,21 @@ class MailController extends Controller
             'number'      => 'nullable|string|max:255',
             'date'        => 'nullable|date',
             'category_id' => 'required|exists:categories,id',
-            'file_path'        => 'nullable|file|mimes:pdf|max:2048', // opsional
+            'file_path'        => 'nullable|file|mimes:pdf|max:2048', 
         ]);
 
         DB::transaction(function () use ($request, $mail, &$data) {
             // jika ada file baru
             if ($request->hasFile('file')) {
-                // hapus file lama kalau ada & benar-benar exist di disk
                 if ($mail->file_path && Storage::disk('public')->exists($mail->file_path)) {
                     Storage::disk('public')->delete($mail->file_path);
                 }
 
-                // simpan file baru dengan nama yang rapi
                 $ext = $request->file('file')->getClientOriginalExtension();
                 $filename = Str::slug($request->title) . '_' . now()->format('YmdHis') . '.' . $ext;
 
                 $filePath = $request->file('file')->storeAs('mails', $filename, 'public');
-                $data['file_path'] = $filePath; // <- ini kunci: harus ikut ke $fillable
+                $data['file_path'] = $filePath; 
             }
 
             $mail->update($data);

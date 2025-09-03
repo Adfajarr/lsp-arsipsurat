@@ -41,10 +41,10 @@
         {{-- File --}}
         <div>
             <label class="block text-gray-700">Upload File (PDF)</label>
-            <input type="file" name="file" accept="application/pdf"
+            <input type="file" name="file_path" accept="application/pdf"
                    class="w-full border px-3 py-2 rounded focus:ring focus:ring-blue-300"
                    required>
-            @error('file') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+            @error('file_path') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
         </div>
 
         {{-- Buttons --}}
