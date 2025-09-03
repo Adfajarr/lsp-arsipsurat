@@ -9,6 +9,6 @@ class mail extends Model
     protected $fillable = ['title', 'number', 'date', 'category_id', 'file_path'];
 
     public function category() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

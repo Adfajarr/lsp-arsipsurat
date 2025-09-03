@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('number')->nullable();
-            $table->date('date')->nullable();
-            $table->foreignId('category_id')->constrained('categorys')->onDelete('cascade');
+            // $table->date('date')->nullable();
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->string('file_path');
             $table->timestamps();
         });
